@@ -11,10 +11,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Dto implements DtoInterface
 {
-
-    /**
-     * @throws ReflectionException
-     */
     public function transformToObject(object $object): void
     {
         $reflection = new ReflectionClass(static::class);
