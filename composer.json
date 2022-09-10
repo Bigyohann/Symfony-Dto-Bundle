@@ -2,6 +2,7 @@
   "type": "symfony-bundle",
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "name": "bigyohann/symfony-dto-bundle",
   "authors": [
     {
       "email": "contact@yohannbiglia.fr",
