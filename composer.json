@@ -3,6 +3,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "name": "bigyohann/symfony-dto-bundle",
+  "description": "Symfony bundle to add automatic Dto converter",
   "authors": [
     {
       "email": "contact@yohannbiglia.fr",
