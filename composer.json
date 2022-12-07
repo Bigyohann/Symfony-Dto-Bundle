@@ -16,11 +16,11 @@
     "ext-ctype": "*",
     "ext-iconv": "*",
     "sensio/framework-extra-bundle": "^6.2",
-    "symfony/framework-bundle": "6.1.*",
-    "symfony/runtime": "6.1.*",
-    "symfony/serializer": "6.1.*",
-    "symfony/validator": "6.1.*",
-    "symfony/yaml": "6.1.*",
+    "symfony/framework-bundle": "6.*",
+    "symfony/runtime": "6.*",
+    "symfony/serializer": "6.*",
+    "symfony/validator": "6.*",
+    "symfony/yaml": "6.*",
     "symfony/serializer-pack": "^1.1"
   },
   "autoload": {
