@@ -3,4 +3,4 @@ services:
     tags:
       - { name: controller.argument_value_resolver }
     arguments:
-      [ '@serializer', '@vali
+      [ '@serializer', '@validator' ]
