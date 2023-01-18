@@ -1,12 +1,12 @@
 <?php
 
-namespace Bigyohann\DtoBundle\ParamConverter;
+namespace Bigyohann\DtoBundle\ValueResolver;
 
 use Bigyohann\DtoBundle\Dto\DtoInterface;
 use Bigyohann\DtoBundle\Exception\DtoValidationException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
+use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -16,34 +16,33 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class DtoParamConverter implements ParamConverterInterface
+class DtoValueResolver implements ValueResolverInterface
 {
-
-
-    public function __construct(private readonly SerializerInterface $serializer, private readonly ValidatorInterface $validator)
+    public function __construct(
+        private readonly SerializerInterface $serializer,
+        private readonly ValidatorInterface  $validator
+    )
     {
     }
 
-    /**
-     * @inheritDoc
-     * @throws DtoValidationException
-     */
-    public function apply(Request $request, ParamConverter $configuration): bool
+    public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if ($request->getContentType() !== 'json') {
-            return false;
+        $argumentType = $argument->getType();
+
+        if (!is_subclass_of($argumentType, DtoInterface::class, true) || $request->getContentTypeFormat() !== 'json') {
+            return [];
         }
 
         $data = $request->getContent();
         if (empty($data)) {
             throw new DtoValidationException('No body provided', []);
         }
-        $objectDto = new ($configuration->getClass())();
+        $objectDto = new ($argument->getType())();
 
         try {
             $data = $this->serializer->deserialize(
                 $data,
-                $configuration->getClass(),
+                $argumentType,
                 'json',
                 [AbstractNormalizer::OBJECT_TO_POPULATE => $objectDto,
                     DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,]
@@ -73,16 +72,8 @@ class DtoParamConverter implements ParamConverterInterface
         if (count($errors) > 0) {
             throw new DtoValidationException('Error from request', $errors);
         }
-        $request->attributes->set($configuration->getName(), $objectDto);
-        return true;
-    }
+        return [$objectDto];
 
-    /**
-     * @inheritDoc
-     */
-    public function supports(ParamConverter $configuration): bool
-    {
-        return is_subclass_of($configuration->getClass(), DtoInterface::class);
     }
 
 }
