@@ -1,7 +1,6 @@
 services:
-  DtoParamConverter:
-    class: 'Bigyohann\DtoBundle\ParamConverter\DtoParamConverter'
+  Bigyohann\DtoBundle\ValueResolver\DtoValueResolver:
     tags:
-      - { name: request.param_converter, converter: DtoParamConverter }
+      - { name: controller.argument_value_resolver }
     arguments:
-      [ '@serializer', '@validator' ]
+      [ '@serializer', '@vali
