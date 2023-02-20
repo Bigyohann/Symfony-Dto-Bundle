@@ -30,7 +30,7 @@ class Dto implements DtoInterface
             $setFunctionName = 'set' . ucfirst($property->name);
             $getFunctionName = 'get' . ucfirst($property->name);
             if (method_exists($object::class, $setFunctionName) !== true) {
-                throw new HttpException(500, 'exception');
+                throw new HttpException(500, $setFunctionName . ' does not exist on target entity (for autoconvert tag)');
             }
             if ($this->$getFunctionName($this->{$getFunctionName}())) {
                 $object->$setFunctionName($this->{$getFunctionName}());
